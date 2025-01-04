@@ -1,64 +1,40 @@
-name: CI/CD Pipeline for E-Commerce Platfrom 
+name: CI/CD Pipeline for E-Commerce Platform
 
 on:
-	push:
-		branches:
-			-main
-	pull_request:
-		branches:
-			-main 
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-	build:
-		runs-on:ubuntu-latest
+  build:
+    runs-on: ubuntu-latest
 
-		steps:
-		# Checkout the code
-		- name: Checkout Code
-		uses: actions/checkout@v3
-		
-		# Setup .NET Core
-		- name: Setup .NET
-		uses: actions/setup-dotnet@v3
-		with:
-			dotnet-version:'9.0'
+    steps:
+      # Checkout the code
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-		# Restore dependencies
-		- name: Restore Dependencies
-			run: dotnet restore
+      # Setup .NET Core
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '9.0'
 
-		# Build the project
-		- name: Build Project
-		run: dotnet build --configuration Release --no-restore
+      # Restore dependencies
+      - name: Restore Dependencies
+        run: dotnet restore
 
-		# Run tests
-		- name: Run Tests
-		run: dotnet test --configuration Release --no-build-verbosity normal
+      # Build the project
+      - name: Build Project
+        run: dotnet build --configuration Release --no-restore
 
-		# Publish the app
-		- name: Publish App
-		run: dotnet publish -c Release -o publish_output
+      # Run tests
+      - name: Run Tests
+        run: dotnet test --configuration Release --no-build --verbosity normal
 
-	deploy:
-		needs: build
-		runs-on: ubuntu-latest
-		environment:
-			name:production
-			url:${{steps.deploy.outputs.webapp-url}}
-
-		steps:
-		#Checkout the code
-		- name: Checkout Code
-		uses: actions/checkout@v3
-
-		#Deploy to Azure Web App
-		- name: 'Deploy to Azure WebApp'
-		uses: azure/webapps-deploy@v2
-		with:
-			app-name:'ECommercePlatform'
-			slot-name:'production'
-			publish-profiles:${{secrets.AZURE_WEBAPP_PUBLISH_PROFILE}}
-			package:./publish_output
-
-
-
+      # Publish the app
+      - name: Publish App
+        run: dotnet publish -c Release -o publish_output
