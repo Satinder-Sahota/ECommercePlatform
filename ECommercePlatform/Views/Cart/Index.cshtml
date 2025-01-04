@@ -1,0 +1,66 @@
+﻿@model IEnumerable<CartItem>
+
+<h1>Your Cart</h1>
+
+@if (!Model.Any())
+{
+    <p>Your cart is empty!</p>
+    <a asp-controller="Product" asp-action="Index" class="btn btn-primary">Continue Shopping</a>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Total</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.ProductName</td>
+                    <td>@item.Price</td>
+                    <td>@item.Quantity</td>
+                    <td>$@(item.Price * item.Quantity)</td>
+                    <td>
+                        <form asp-controller="Cart" asp-action="UpdateQuantity" method="post" class="d-inline">
+                            <input type="hidden" name="productId" value="@item.ProductId" />
+                            <input type="number" name="quantity" value="@item.Quantity" min="1" class="form-control" style="width: 80px; display: inline;" />
+                            <button type="submit" class="btn btn-link" title="Update Quantity">
+                                <i class="fa fa-refresh" aria-hidden="true"></i>
+                            </button>
+                        </form>
+                        <form asp-controller="Cart" asp-action="RemoveFromCart" method="post" class="d-inline">
+                            <input type="hidden" name="productId" value="@item.ProductId" />
+                            <button type="submit" class="btn btn-link text-danger" title="Remove from Cart">
+                                <i class="fa fa-trash" aria-hidden="true"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-between">
+        <h3>
+            Total Quantity: @Model.Sum(item => item.Quantity)
+        </h3>
+        <h3>
+            Total Price: @Model.Sum(item => item.Price * item.Quantity)
+        </h3>
+    </div>
+
+
+    <div class="d-flex justify-content-between">
+        <a asp-controller="Product" asp-action="Index" class="btn btn-secondary">Continue Shopping</a>
+        <form asp-controller="Cart" asp-action="PlaceOrder" method="post">
+            <button type="submit" class="btn btn-success">Place Order</button>
+        </form>
+    </div>
+}

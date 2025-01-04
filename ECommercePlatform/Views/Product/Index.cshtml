@@ -1,0 +1,93 @@
+﻿<style>
+    .badge {
+        font-size: 0.9rem;
+        margin-left: 5px;
+        padding: 0.5em 0.6em;
+    }
+
+</style>
+@model IEnumerable<Product>
+
+<h1>Product List</h1>
+
+@if (User.IsInRole("Admin"))
+{
+    <!-- Admin View -->
+    <a asp-controller="Product" asp-action="Create" class="btn btn-primary">Create New Product</a>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Category</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in Model)
+            {
+                <tr>
+                    <td>@product.Name</td>
+                    <td>@product.Description</td>
+                    <td>$@product.Price</td>
+                    <td>@product.Category?.Name</td>
+                    <td>
+                        <a asp-controller="Product" asp-action="Details" asp-route-id="@product.Id" class="btn btn-info">View Details</a>
+                        <a asp-controller="Product" asp-action="Edit" asp-route-id="@product.Id" class="btn btn-warning">Edit</a>
+                        <a asp-controller="Product" asp-action="Delete" asp-route-id="@product.Id" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="d-flex justify-content-between mb-3">
+        <h2>Available Products</h2>
+        <a asp-controller="Cart" asp-action="Index" class="btn btn-success">
+            <i class="fa fa-shopping-cart"></i> View Cart
+            @if (ViewBag.CartItemCount > 0)
+            {
+                <span class="badge bg-danger">@ViewBag.CartItemCount</span>
+            }
+        </a>
+    </div>
+    <!-- Regular User View -->
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Category</th>
+                <th>Quantity</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in Model)
+            {
+                <tr>
+                    <form asp-controller="Cart" asp-action="AddToCart" method="post" class="d-inline">
+                    <td>@product.Name</td>
+                    <td>$@product.Price</td>
+                    <td>@product.Category?.Name</td>
+                    <td>
+                        <input type="number" name="quantity" value="@((ViewData[$"Quantity_{product.Id}"] as int?) ?? 1)" min="1" class="form-control" style="width: 80px; display: inline;" />
+                    </td>
+                    <td>
+                        <input type="hidden" name="productId" value="@product.Id" />
+                        <input type="hidden" name="productName" value="@product.Name" />
+                        <input type="hidden" name="price" value="@product.Price" />
+                        <button type="submit" class="btn btn-link text-primary" title="Add to Cart">
+                            <i class="fa fa-cart-plus"></i>
+                        </button>
+                    </td>
+                    </form>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+}
