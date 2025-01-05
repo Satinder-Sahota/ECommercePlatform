@@ -37,6 +37,14 @@ jobs:
     - name: Run Tests
       run: dotnet test --no-build --verbosity normal
 
+    # Saving published files to Artifacts
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+       name: publish_output
+       path: publish_output/
+
+
     # Publish the app
     - name: Publish app
       run: dotnet publish -c Release -o publish_output
