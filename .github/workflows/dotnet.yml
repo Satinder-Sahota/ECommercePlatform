@@ -43,7 +43,7 @@ jobs:
 
     # Publish the app
     - name: Publish app
-      run: dotnet publish -c Release -o publish_output
+      run: dotnet publish -c Release -o ./publish_output
 
     # Saving published files to Artifacts
     - name: Upload Build Artifacts
@@ -59,6 +59,7 @@ jobs:
        app-name: ECommercePlatform
        slot-name: production
        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+       package: ./publish_output
       env:
         DOTNET_ROOT: /usr/share/dotnet
 
