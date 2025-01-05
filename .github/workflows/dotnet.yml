@@ -65,8 +65,7 @@ jobs:
 
     # Apply database migrations
     - name: Apply Database Migrations
-      env:
-        PATH: ${{ secrets.PATH }}:/home/runner/.dotnet/tools
+      working-directory: ./ECommercePlatform
       run: dotnet ef database update
    
     
