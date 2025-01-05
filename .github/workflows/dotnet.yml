@@ -65,7 +65,9 @@ jobs:
 
     # Apply database migrations
     - name: Apply Database Migrations
-      working-directory: ./ECommercePlatform
-      run: dotnet ef database update
+      run: dotnet ef database update --connection "$AZURE_SQL_CONNECTION_STRING"
+      env:
+       AZURE_SQL_CONNECTION_STRING: ${{ secrets.AZURE_SQL_CONNECTION_STRING }}
+
    
     
