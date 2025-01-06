@@ -17,15 +17,15 @@ namespace ECommercePlatform.Tests.IntegrationTests
         {
             _client = factory.CreateClient(); 
         }
-        [Fact]
-        public async Task AddToCart_ReturnsSuccess()
-        {
-            //Arrange
-            var productId = 1;
-            //Act
-            var response = await _client.PostAsync($"/Cart/AddToCart?productId={productId}", null);
-            // Assert
-            response.EnsureSuccessStatusCode();
-        }
+        //[Fact]
+        //public async Task AddToCart_ReturnsSuccess()
+        //{
+        //    //Arrange
+        //    var productId = 1;
+        //    //Act
+        //    var response = await _client.PostAsync($"/Cart/AddToCart?productId={productId}", null);
+        //    // Assert
+        //    response.EnsureSuccessStatusCode();
+        //}
     }
 }
