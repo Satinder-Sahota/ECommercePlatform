@@ -39,7 +39,8 @@ jobs:
 
     # Run tests
     - name: Run Tests
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test --no-build --verbosity detailed --logger trx
+      
 
     # Publish the app
     - name: Publish app
